@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
+/* wraps Apache's PDFMergerUtility */
 public class Merger {
     public static void merge(List<String> pdfFullPaths, String destination) {
         PDFMergerUtility merger = new PDFMergerUtility();
