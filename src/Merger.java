@@ -1,25 +1,30 @@
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
+import java.util.List;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
 public class Merger {
-    public static void main(String[] args) {
-        File pdf1 = new File("absolute path to pdf");
-        File pdf2 = new File("absolute path to second pdf");
-
+    public static void merge(List<String> pdfFullPaths, String destination) {
         PDFMergerUtility merger = new PDFMergerUtility();
-        merger.setDestinationFileName("absolute path to destination");
-          
-        /* add pdf sources to merger, then merge
-         * catch necessary exceptions
-         */
+        merger.setDestinationFileName(destination);
+        addSources(merger, pdfFullPaths);
+        merge(merger);
+    }
+
+    private static void addSources(PDFMergerUtility merger, List<String> sources) {
         try {
-            merger.addSource(pdf1);
-            merger.addSource(pdf2);
-            merger.mergeDocuments(null); //null allows merger to use unrestricted main memory
+            for (String fullPathToPdf : sources) {
+                merger.addSource(fullPathToPdf);
+            }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    private static void merge(PDFMergerUtility merger) {
+        try {
+            merger.mergeDocuments(null); //null allows merger to use unrestricted main memory
         } catch (IOException e) {
             e.printStackTrace();
         }
