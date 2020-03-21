@@ -8,9 +8,9 @@ JARS = ".:./lib/commons-logging-1.2.jar:./lib/miglayout-4.0.jar:./lib/pdfbox-2.0
 .java.class:
 	$(JC) $(FLAGS) $(JARS) ./src/*.java
 
-CLASSES = src/Main.java src/Window.java src/MergerUI.java src/Merger.java
+CLASSES = src/PDFTool.java src/Window.java src/MergerUI.java src/Merger.java
 
-MAIN = Main
+MAIN = PDFTool
 
 default = classes
 
