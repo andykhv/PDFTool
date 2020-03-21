@@ -2,13 +2,14 @@ import javax.swing.JFrame;
 import javax.swing.JComponent;
 
 public class Window {
+    private static final String TITLE = "PDFTool";
+    private static final int WIDTH = 800;
+    private static final int HEIGHT = 400;
     private JFrame window;
-    private int dimension = 400;
-    private String windowTitle = "PDFTool";
 
     public Window(JComponent pdfToolContainer) {
-        this.window = new JFrame(windowTitle);
-        this.window.setSize(dimension, dimension);
+        this.window = new JFrame(TITLE);
+        this.window.setSize(WIDTH, HEIGHT);
         this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.window.add(pdfToolContainer);
     }
