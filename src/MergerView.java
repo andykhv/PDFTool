@@ -10,7 +10,7 @@ import java.awt.Dimension;
 import java.awt.Color;
 import net.miginfocom.swing.MigLayout;
 
-public class MergerUI {
+public class MergerView {
     private static final String SOURCES_TITLE = "PDFs to merge:";
     private static final String SOURCES_ADD_TITLE = "Add";
     private static final String SOURCES_REMOVE_TITLE = "Remove";
@@ -25,33 +25,33 @@ public class MergerUI {
     private static final int FILE_NAME_INPUT_WIDTH = 100;
     private static final int FILE_NAME_INPUT_HEIGHT = 20;
 
-    private JPanel ui;
+    private JPanel view;
 
-    public MergerUI() {
-        final JPanel ui = new JPanel(new MigLayout());
+    public MergerView() {
+        final JPanel view = new JPanel(new MigLayout());
 
-        ui.add(this.buildSourcesUI());
-        ui.add(new JLabel(ARROW_LABEL));
-        ui.add(this.buildDestinationUI());
+        view.add(this.buildSourcesView());
+        view.add(new JLabel(ARROW_LABEL));
+        view.add(this.buildDestinationView());
 
-        this.ui = ui;
+        this.view = view;
     }
 
-    public JPanel getUI() {
-        return this.ui;
+    public JPanel getView() {
+        return this.view;
     }
 
-    private JPanel buildSourcesUI() {
-        final JPanel sourcesUI = new JPanel(new MigLayout());
+    private JPanel buildSourcesView() {
+        final JPanel sourcesView = new JPanel(new MigLayout());
         final JLabel sourcesLabel = new JLabel(SOURCES_TITLE);
         final JScrollPane sourcesListScrollPane = buildSourcesListScrollPane();
         final JPanel sourcesButtonContainer = buildSourcesButtonContainer();
 
-        sourcesUI.add(sourcesLabel, "wrap"); //wrap denotes end of row
-        sourcesUI.add(sourcesListScrollPane, "wrap");
-        sourcesUI.add(sourcesButtonContainer);
+        sourcesView.add(sourcesLabel, "wrap"); //wrap denotes end of row
+        sourcesView.add(sourcesListScrollPane, "wrap");
+        sourcesView.add(sourcesButtonContainer);
 
-        return sourcesUI;
+        return sourcesView;
     }
 
     private JScrollPane buildSourcesListScrollPane() {
@@ -73,22 +73,22 @@ public class MergerUI {
         return sourcesButtonContainer;
     }
 
-    private JPanel buildDestinationUI() {
-        final JPanel destinationUI = new JPanel();
+    private JPanel buildDestinationView() {
+        final JPanel destinationView = new JPanel();
         final JPanel fileNameContainer = buildFileNameContainer();
         final JPanel folderContainer = buildFolderContainer();
         final JLabel destinationLabel = new JLabel(DESTINATION_TITLE);
         final JButton chooseFolderButton = new JButton(DESTINATION_CHOOSE_FOLDER_TITLE);
         final JButton saveButton = new JButton(SAVE_TITLE);
 
-        destinationUI.setLayout(new BoxLayout(destinationUI, BoxLayout.Y_AXIS));
-        destinationUI.add(destinationLabel);
-        destinationUI.add(fileNameContainer);
-        destinationUI.add(folderContainer);
-        destinationUI.add(chooseFolderButton);
-        destinationUI.add(saveButton);
+        destinationView.setLayout(new BoxLayout(destinationView, BoxLayout.Y_AXIS));
+        destinationView.add(destinationLabel);
+        destinationView.add(fileNameContainer);
+        destinationView.add(folderContainer);
+        destinationView.add(chooseFolderButton);
+        destinationView.add(saveButton);
 
-        return destinationUI;
+        return destinationView;
     }
 
     private JPanel buildFileNameContainer() {
