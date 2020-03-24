@@ -2,12 +2,15 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.ListModel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.BoxLayout;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentListener;
 import java.awt.Dimension;
 import java.awt.Color;
+import java.awt.event.ActionListener;
 import net.miginfocom.swing.MigLayout;
 
 public class MergerView {
@@ -26,11 +29,17 @@ public class MergerView {
     private static final int FILE_NAME_INPUT_HEIGHT = 20;
 
     private JPanel view;
+    private JList<PDFFile> sourcesJList;
+    private JButton addSourceButton;
+    private JButton removeSourcesButton;
+    private JButton chooseFolderButton;
+    private JTextField fileNameTextView;
+    private JLabel folderNameLabel;
 
-    public MergerView() {
+    public MergerView(ListModel<PDFFile> sources) {
         final JPanel view = new JPanel(new MigLayout());
 
-        view.add(this.buildSourcesView());
+        view.add(this.buildSourcesView(sources));
         view.add(new JLabel(ARROW_LABEL));
         view.add(this.buildDestinationView());
 
@@ -41,10 +50,38 @@ public class MergerView {
         return this.view;
     }
 
-    private JPanel buildSourcesView() {
+    public int[] getSourcesSelectedIndices() {
+        return this.sourcesJList.getSelectedIndices();
+    }
+
+    public String getDestinationFileName() {
+        return this.fileNameTextView.getText();
+    }
+
+    public void setAddSourceButtonListener(ActionListener listener) {
+        this.addSourceButton.addActionListener(listener);
+    }
+
+    public void setRemoveSourcesButtonListener(ActionListener listener) {
+        this.removeSourcesButton.addActionListener(listener);
+    }
+
+    public void setFileNameTextViewListener(DocumentListener listener) {
+        this.fileNameTextView.getDocument().addDocumentListener(listener);
+    }
+
+    public void setChooseFolderButtonListener(ActionListener listener) {
+        this.chooseFolderButton.addActionListener(listener);
+    }
+
+    public void setFolderNameLabelText(String text) {
+        this.folderNameLabel.setText(text);
+    }
+
+    private JPanel buildSourcesView(ListModel<PDFFile> sources) {
         final JPanel sourcesView = new JPanel(new MigLayout());
         final JLabel sourcesLabel = new JLabel(SOURCES_TITLE);
-        final JScrollPane sourcesListScrollPane = buildSourcesListScrollPane();
+        final JScrollPane sourcesListScrollPane = buildSourcesListScrollPane(sources);
         final JPanel sourcesButtonContainer = buildSourcesButtonContainer();
 
         sourcesView.add(sourcesLabel, "wrap"); //wrap denotes end of row
@@ -54,10 +91,12 @@ public class MergerView {
         return sourcesView;
     }
 
-    private JScrollPane buildSourcesListScrollPane() {
-        final JList<String> sourcesList = new JList<>();
+    private JScrollPane buildSourcesListScrollPane(ListModel<PDFFile> sources) {
+        final JList<PDFFile> sourcesList = new JList<>(sources);
         final JScrollPane sourcesListScrollPane = new JScrollPane(sourcesList);
         sourcesListScrollPane.setPreferredSize(new Dimension(SOURCES_LIST_WIDTH, SOURCES_LIST_HEIGHT));
+
+        this.sourcesJList = sourcesList;
 
         return sourcesListScrollPane;
     }
@@ -65,10 +104,13 @@ public class MergerView {
     private JPanel buildSourcesButtonContainer() {
         final JPanel sourcesButtonContainer = new JPanel(new MigLayout());
         final JButton addSourceButton = new JButton(SOURCES_ADD_TITLE);
-        final JButton removeSourceButton = new JButton(SOURCES_REMOVE_TITLE);
+        final JButton removeSourcesButton = new JButton(SOURCES_REMOVE_TITLE);
+
+        this.addSourceButton = addSourceButton;
+        this.removeSourcesButton = removeSourcesButton;
 
         sourcesButtonContainer.add(addSourceButton);
-        sourcesButtonContainer.add(removeSourceButton);
+        sourcesButtonContainer.add(removeSourcesButton);
 
         return sourcesButtonContainer;
     }
@@ -80,6 +122,8 @@ public class MergerView {
         final JLabel destinationLabel = new JLabel(DESTINATION_TITLE);
         final JButton chooseFolderButton = new JButton(DESTINATION_CHOOSE_FOLDER_TITLE);
         final JButton saveButton = new JButton(SAVE_TITLE);
+
+        this.chooseFolderButton =  chooseFolderButton;
 
         destinationView.setLayout(new BoxLayout(destinationView, BoxLayout.Y_AXIS));
         destinationView.add(destinationLabel);
@@ -96,6 +140,8 @@ public class MergerView {
         final JLabel fileNameLabel = new JLabel(FILE_NAME_TITLE);
         final JTextField fileNameInput = new JTextField();
 
+        this.fileNameTextView = fileNameInput;
+
         fileNameInput.setPreferredSize(new Dimension(FILE_NAME_INPUT_WIDTH, FILE_NAME_INPUT_HEIGHT));
 
         fileNameContainer.add(fileNameLabel);
@@ -109,6 +155,8 @@ public class MergerView {
         final JPanel folderContainer = new JPanel(new MigLayout());
         final JLabel folderTitle = new JLabel(FOLDER_TITLE);
         final JLabel folderName = new JLabel();
+
+        this.folderNameLabel = folderName;
 
         folderContainer.add(folderTitle);
         folderContainer.add(folderName);
