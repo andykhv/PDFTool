@@ -6,9 +6,13 @@ import javax.swing.event.DocumentEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.List;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class MergerController {
     private static final String PDF_FILTER_TITLE = "PDF File";
+    private static final String PDF_EXTENSION = ".pdf";
 
     private MergerView view;
     private DefaultListModel<PDFFile> sources;
@@ -23,6 +27,7 @@ public class MergerController {
         this.view.setRemoveSourcesButtonListener(new RemoveSourcesButtonListener());
         this.view.setFileNameTextViewListener(new FileNameTextViewListener());
         this.view.setChooseFolderButtonListener(new ChooseFolderButtonListener());
+        this.view.setMergeButtonListener(new MergeButtonListener());
     }
 
     public class AddSourceButtonListener implements ActionListener {
@@ -80,6 +85,16 @@ public class MergerController {
                 destinationFolderPath = folderChooser.getSelectedFile().getPath();
                 view.setFolderNameLabelText(destinationFolderPath);
             }
+        }
+    }
+
+    public class MergeButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            List<File> sourceList = Arrays.stream(sources.toArray())
+                .map(source -> ((PDFFile)source).getFile())
+                .collect(Collectors.toList());
+            Merger.merge(sourceList, destinationFolderPath +
+                "/" + destinationFileName + PDF_EXTENSION);
         }
     }
 }

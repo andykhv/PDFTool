@@ -6,17 +6,17 @@ import java.io.FileNotFoundException;
 
 /* wraps Apache's PDFMergerUtility */
 public class Merger {
-    public static void merge(List<String> pdfFullPaths, String destination) {
+    public static void merge(List<File> pdfs, String destination) {
         PDFMergerUtility merger = new PDFMergerUtility();
         merger.setDestinationFileName(destination);
-        addSources(merger, pdfFullPaths);
+        addSources(merger, pdfs);
         merge(merger);
     }
 
-    private static void addSources(PDFMergerUtility merger, List<String> sources) {
+    private static void addSources(PDFMergerUtility merger, List<File> sources) {
         try {
-            for (String fullPathToPdf : sources) {
-                merger.addSource(fullPathToPdf);
+            for (File source : sources) {
+                merger.addSource(source);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
