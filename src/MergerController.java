@@ -1,5 +1,6 @@
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
@@ -13,6 +14,9 @@ import java.util.stream.Collectors;
 public class MergerController {
     private static final String PDF_FILTER_TITLE = "PDF File";
     private static final String PDF_EXTENSION = ".pdf";
+    private static final String ERROR_TITLE = "Error";
+    private static final String EMPTY_FIELDS_MESSAGE = "1 or more fields are missing";
+    private static final String DESTINATION_FILE_NAME_TAKEN_MESSAGE = "Name is taken";
 
     private MergerView view;
     private DefaultListModel<PDFFile> sources;
@@ -90,6 +94,42 @@ public class MergerController {
 
     public class MergeButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            if (areFieldsEmpty()) {
+                JOptionPane.showMessageDialog(view.getView(),
+                    EMPTY_FIELDS_MESSAGE,
+                    ERROR_TITLE,
+                    JOptionPane.ERROR_MESSAGE);
+            } else if (isDestinationFileNameTaken()) {
+                JOptionPane.showMessageDialog(view.getView(),
+                    DESTINATION_FILE_NAME_TAKEN_MESSAGE,
+                    ERROR_TITLE,
+                    JOptionPane.ERROR_MESSAGE);
+            } else {
+                merge();
+            }
+        }
+
+        private boolean areFieldsEmpty() {
+            return (destinationFolderPath == null)
+                || (destinationFileName == null)
+                || (destinationFileName.equals(""))
+                || (sources.size() == 0);
+        }
+
+        private boolean isDestinationFileNameTaken() {
+            File directory = new File(destinationFolderPath);
+            String destinationFileNamePDF = destinationFileName + PDF_EXTENSION;
+
+            for (String fileName : directory.list()) {
+                if (destinationFileNamePDF.equals(fileName)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void merge() {
             List<File> sourceList = Arrays.stream(sources.toArray())
                 .map(source -> ((PDFFile)source).getFile())
                 .collect(Collectors.toList());
